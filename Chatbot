@@ -6,7 +6,7 @@ from tkinter import ttk
 from tkinter import scrolledtext
 import google.generativeai as genai
 
-genai.configure(api_key="AIzaSyC6ZlzQ7i_C8sEpxaHAl2csmcky0n3M6U8")
+genai.configure(api_key="place your api key here")
 
 # Create the model
 # See https://ai.google.dev/api/python/google/generativeai/GenerativeModel
