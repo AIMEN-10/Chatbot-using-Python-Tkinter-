@@ -1,0 +1,77 @@
+
+
+import tkinter as tk
+from tkinter import *
+from tkinter import ttk
+from tkinter import scrolledtext
+import google.generativeai as genai
+
+genai.configure(api_key="AIzaSyC6ZlzQ7i_C8sEpxaHAl2csmcky0n3M6U8")
+
+# Create the model
+# See https://ai.google.dev/api/python/google/generativeai/GenerativeModel
+generation_config = {
+  # "temperature": 1,
+  # "top_p": 0.95,
+  # "top_k": 64,
+  "max_output_tokens": 8192,
+  "response_mime_type": "text/plain",
+}
+safety_settings = [
+
+]
+
+model = genai.GenerativeModel(
+  model_name="gemini-1.5-flash-latest",
+
+)
+
+chat_session = model.start_chat()
+
+# response = chat_session.send_message("what is operating system")
+
+# print(response.text)
+# print(chat_session.history)
+win = tk.Tk()
+win.geometry("500x700")
+win.title("CHATBOT")
+win.configure(bg='#B1C381')
+
+
+
+
+win.grid_columnconfigure(0, weight=1)
+
+style = ttk.Style()
+style.configure("TLabel", background="white", foreground="black", font=("Arial", 14))
+style.configure("TButton", background="#3A4D39", foreground="black", font=("Arial", 12), padding=10)
+style.configure("TEntry", font=("Arial", 14), padding=10)
+
+text = ttk.Label(win, text="Get Solutions to your problems", style="TLabel", font=("Arial", 24))
+text.grid(column=0, row=0, pady=(20, 10)) 
+
+left_frame = tk.Frame(win, width=500, height=500, bg='#ffe4c9')
+left_frame.grid(row=1, column=0, padx=20, pady=20, sticky='nsew')
+left_frame.grid_columnconfigure(0, weight=1)
+
+chat_display = scrolledtext.ScrolledText(left_frame, wrap=tk.WORD, width=60, height=25, state='disabled', font=("Arial", 12), bg="#ECE3CE", fg="#000000")
+chat_display.grid(column=0, row=0, sticky='nsew')
+
+val = tk.StringVar()
+valEntered = ttk.Entry(win, width=50, textvariable=val,background="#86A789",style="TEntry" ,font=("Arial", 14))
+valEntered.grid(column=0, row=2, padx=20, pady=10, sticky='ew')
+
+
+def on_click_undo():
+  response = chat_session.send_message(val.get())
+  chat_display.configure(state='normal')
+  chat_display.insert(tk.END, "You: " + val.get() + "\n")
+  chat_display.insert(tk.END, "Bot: " + response.text + "\n\n")
+  chat_display.configure(state='disabled')
+  # chat_display.yview(tk.END)
+  val.set('')
+  
+btn1 = ttk.Button(win, text="Send", command=on_click_undo, style="TButton")
+btn1.grid(column=0, row=2, padx=20, pady=10, sticky='e')
+
+win.mainloop()
